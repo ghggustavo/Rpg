@@ -1,57 +1,79 @@
+import random
+
+
 def batalhar(heroi, inimigo):
 
-while monstro1_vida > 0 and vida > 0:
-    print("O que você quer fazer?")
-    print("1 - ⚔️  Atacar")
-    print("2 - 🏃 Fugir")
-    print()
+    while heroi.esta_vivo() and inimigo.esta_vivo():
 
-    acao = input("Digite 1 ou 2: ")
+        print("O que você quer fazer?")
+        heroi.mostrar_acoes()
+        print()
 
-    if acao == "1":
-        if classe == "Mago":
-            if mana <= 0:
-                print("💙 Você não tem mana suficiente para atacar!")
-                continue
+        acao = input("Digite sua ação: ").strip()
 
-            dano_jogador = random.randint(ataque - 3, ataque + 8)
-            mana = mana - 15
-            print(f"🔮 Você lançou uma magia e causou {dano_jogador} de dano!")
-            print(f"💙 Mana restante: {mana}")
+        if acao == "4":
+            print("🏃 Você fugiu da batalha!")
+            return False
 
-        else:  # Cavaleiro
-            dano_jogador = random.randint(ataque - 5, ataque + 5)
-            print(f"⚔️  Você atacou o {monstro1_nome} e causou {dano_jogador} de dano!")
+        acao_realizada = heroi.executar_acao(acao, inimigo)
 
-        monstro1_vida = monstro1_vida - dano_jogador
+        if acao_realizada is None:
+            print("❌ Opção inválida!")
+            continue
 
-        # Monstro contra-ataca (se ainda estiver vivo)
-        if monstro1_vida > 0:
-            dano_monstro = random.randint(monstro1_ataque - 3, monstro1_ataque + 3)
-            vida = vida - dano_monstro
-            print(f"💀 O {monstro1_nome} contra-atacou e causou {dano_monstro} de dano!")
+        if not acao_realizada:
+            continue
 
-    elif acao == "2":
-        print("🏃 Você fugiu da batalha!")
-        break
+        if inimigo.esta_vivo():
 
-    else:
-        print("❌ Opção inválida!")
-        continue
+            dano = inimigo.calcular_dano()
 
-    # Status após cada rodada
-    print()
-    if classe == "Mago":
-        print(f"❤️  Sua vida: {vida}  |  💙 Mana: {mana}  |  ❤️  Vida do {monstro1_nome}: {max(0, monstro1_vida)}")
-    else:
-        print(f"❤️  Sua vida: {vida}  |  ❤️  Vida do {monstro1_nome}: {max(0, monstro1_vida)}")
-    print()
+            if hasattr(heroi, "defendendo") and heroi.defendendo:
 
-# Resultado da batalha
-if monstro1_vida <= 0:
-    ouro_ganho = random.randint(10, 15)
-    ouro = ouro + ouro_ganho
-    print(f"🏆 Você derrotou o {monstro1_nome}!")
-    print(f"💰 Você ganhou {ouro_ganho} de ouro! Total: {ouro}")
-elif vida <= 0:
-    print("💀 Você foi derrotado... Game Over!")
+                dano_reduzido = dano // 2
+
+                heroi.receber_dano(dano_reduzido)
+
+                print(
+                    f"🛡️ Defesa ativada! "
+                    f"O dano foi reduzido de {dano} "
+                    f"para {dano_reduzido}!"
+                )
+
+                heroi.defendendo = False
+
+            else:
+                heroi.receber_dano(dano)
+
+                print(
+                    f"💀 O {inimigo.nome} contra-atacou "
+                    f"e causou {dano} de dano!"
+                )
+
+        print()
+        print(
+            f"❤️ Sua vida: {max(0, heroi.vida)}"
+            f" | ❤️ Vida do {inimigo.nome}: "
+            f"{max(0, inimigo.vida)}"
+        )
+        print()
+
+    # Resultado da batalha
+
+    if not inimigo.esta_vivo():
+
+        ouro_ganho = random.randint(10, 15)
+        heroi.ouro += ouro_ganho
+
+        print(f"🏆 Você derrotou o {inimigo.nome}!")
+        print(
+            f"💰 Você ganhou {ouro_ganho} de ouro! "
+            f"Total: {heroi.ouro}"
+        )
+
+        return True
+
+    if not heroi.esta_vivo():
+
+        print("💀 Você foi derrotado... Game Over!")
+        return False
