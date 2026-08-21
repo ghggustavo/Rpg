@@ -113,6 +113,7 @@ class Mago(Heroi):
         )
 
         self.ataque_magico = 20
+        self.escudo_ativo = False
 
     def mostrar_acoes(self):
         print("1 - ⚔️  Atacar")
@@ -124,6 +125,12 @@ class Mago(Heroi):
 
         if acao == "1":
             return self.atacar(inimigo)
+
+        elif acao == "2":
+            return self.magia_especial(inimigo)
+
+        elif acao == "3":
+            return self.escudo_magico()
 
         return None
 
@@ -149,3 +156,49 @@ class Mago(Heroi):
         print(f"💙 Mana restante: {self.mana}")
 
         return True
+
+    def magia_especial(self, inimigo):
+
+        if self.mana <30:
+            print("❌ Mana insuficiente para a magia especial!")
+            return False
+
+        dano = random.randint(
+                self.ataque_magico + 10,
+                self.ataque_magico + 25
+        )
+
+        self.mana -= 30
+
+        inimigo.receber_dano(dano)
+
+        print("💥 MAGIA ESPECIAL!")
+        print(f"🔮 Você causou {dano} de dano!")
+        print(f"💙 Mana restante: {self.mana}")
+
+        return True
+
+    def escudo_magico(self):
+
+        if self.mana < 25:
+            print("❌ Mana insuficiente para ativar o escudo!")
+            return False
+
+        self.mana -= 25
+        self.escudo_ativo = True
+
+        print("🛡️ ESCUDO MÁGICO!")
+        print("✨ O próximo ataque recebido terá o dano reduzido!")
+        print(f"💙 Mana restante: {self.mana}")
+
+        return True
+
+    def receber_dano(self, dano):
+
+        if self.escudo_ativo:
+            dano = dano // 2
+            self.escudo_ativo = False
+
+            print("🛡️ O escudo mágico reduziu o dano pela metade!")
+
+        super().receber_dano(dano)
