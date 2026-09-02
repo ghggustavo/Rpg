@@ -109,14 +109,14 @@ class Mago(Heroi):
             nome=nome,
             vida=70,
             ataque=10,
-            mana=100
+            mana=200
         )
 
         self.ataque_magico = 20
         self.escudo_ativo = False
 
     def mostrar_acoes(self):
-        print("1 - ⚔️  Atacar")
+        print("1 - 🔮 Ataque Mágico")
         print("2 - 💥 Magia Especial")
         print("3 - 🛡️  Escudo Mágico")
         print("4 - 🏃 Fugir")
@@ -135,37 +135,30 @@ class Mago(Heroi):
         return None
 
     def atacar(self, inimigo):
-        if self.mana < 15:
-            print("💙 Você não tem mana suficiente para atacar!")
-            return False
 
         dano = random.randint(
             self.ataque_magico - 3,
             self.ataque_magico + 8
         )
 
-        self.mana -= 15
-
         inimigo.receber_dano(dano)
 
         print(
-            f"🔮 Você lançou uma magia e causou "
-            f"{dano} de dano!"
+            f"🔮 Você lançou um ataque mágico "
+            f"e causou {dano} de dano!"
         )
-
-        print(f"💙 Mana restante: {self.mana}")
 
         return True
 
     def magia_especial(self, inimigo):
 
-        if self.mana <30:
+        if self.mana < 30:
             print("❌ Mana insuficiente para a magia especial!")
             return False
 
         dano = random.randint(
-                self.ataque_magico + 10,
-                self.ataque_magico + 25
+            self.ataque_magico + 10,
+            self.ataque_magico + 25
         )
 
         self.mana -= 30
