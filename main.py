@@ -1,5 +1,5 @@
 from heroi import Cavaleiro, Mago
-from inimigo import Inimigo
+from inimigo import Goblin, Orc
 from batalha import batalhar
 
 
@@ -49,12 +49,7 @@ print("O corredor está escuro e úmido...")
 print("De repente, um inimigo aparece na sua frente!")
 print()
 
-inimigo = Inimigo(
-    nome="Goblin",
-    vida=50,
-    ataque_min=5,
-    ataque_max=15
-)
+inimigo = Orc()
 
 print(f"💀 {inimigo.nome} apareceu!")
 print(f"❤️ Vida do inimigo: {inimigo.vida}")
